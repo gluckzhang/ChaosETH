@@ -1,0 +1,12 @@
+ERROR[10-06|02:04:00.044] Snapshot extension registration failed   peer=b822a526 err="peer connected on snap without compatible eth support"
+INFO [10-06|02:04:00.848] Imported new block headers               count=1    elapsed=7.680ms   number=13,362,617 hash=942ad9..d3a45e
+INFO [10-06|02:04:07.543] Imported new block headers               count=1    elapsed=7.084ms   number=13,362,618 hash=b0a718..44bf48
+INFO [10-06|02:04:08.287] Downloader queue stats                   receiptTasks=0   blockTasks=0   itemSize=207.73KiB throttle=1262
+INFO [10-06|02:04:10.215] State heal in progress                   accounts=4216@226.59KiB slots=1334@98.50KiB codes=12405@105.33MiB nodes=293,775,568@86.08GiB pending=119,075
+WARN [10-06|02:04:14.262] Checkpoint challenge timed out, dropping id=311173c232587dc3 conn=inbound addr=47.101.207.103:60694  type=Nethermind/v1.11.3-0...
+INFO [10-06|02:04:18.515] State heal in progress                   accounts=4247@228.01KiB slots=1391@102.69KiB codes=12405@105.33MiB nodes=293,776,060@86.08GiB pending=119,908
+ERROR[10-06|02:04:18.610] Snapshot extension registration failed   peer=9bd3dcce err="peer connected on snap without compatible eth support"
+ERROR[10-06|02:04:21.315] Snapshot extension registration failed   peer=79ce5bee err="peer connected on snap without compatible eth support"
+INFO [10-06|02:04:23.937] Imported new block headers               count=1    elapsed=6.242ms   number=13,362,619 hash=496f7d..66e244
+INFO [10-06|02:04:29.502] State heal in progress                   accounts=4280@229.76KiB slots=1458@107.51KiB codes=12405@105.33MiB nodes=293,776,712@86.08GiB pending=121,161
+CRIT [10-06|02:04:29.767] Failed to persist healing data           err="write /data/eth-data/geth/chaindata/1287403.log: connection reset by peer"

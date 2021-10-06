@@ -1,0 +1,32 @@
+2021-10-06 07:44:18 UTC Syncing #13364180 0x5ec1…c346     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+    6 Qed Ancient:#12429972 LI:#13364186   36/50 peers      5 MiB chain    2 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:44:23 UTC Syncing #13364181 0x8c42…d43d     0.20 blk/s   81.0 tx/s    6.0 Mgas/s      0+    5 Qed Ancient:#12429973 LI:#13364186   36/50 peers      4 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:44:43 UTC Syncing #13364183 0x0d52…c20a     0.15 blk/s   27.9 tx/s    2.6 Mgas/s      0+    4 Qed Ancient:#12429976 LI:#13364188   33/50 peers      4 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:44:48 UTC Syncing #13364184 0x5e55…de3e     0.20 blk/s   55.8 tx/s    5.0 Mgas/s      0+    4 Qed Ancient:#12429976 LI:#13364188   34/50 peers      4 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:45:18 UTC  Ancient:#12429979 AB:#12433463   36/50 peers      4 MiB chain  328 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:45:48 UTC  Ancient:#12429981 AB:#12433463   35/50 peers      4 MiB chain  473 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:46:18 UTC  Ancient:#12429981 AB:#12433463   36/50 peers      5 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:46:48 UTC  Ancient:#12429983 AB:#12433463   35/50 peers      5 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:46:51 UTC Reorg to #13364190 0xcece…6033 (0xfb5f…ec42 #13364188 0xac0b…4787 0x2a3e…b03a)
+2021-10-06 07:46:54 UTC Reorg to #13364190 0x511a…c515 (0xcece…6033 0x2a3e…b03a #13364188 0xac0b…4787 0xfb5f…ec42)
+2021-10-06 07:47:18 UTC  Ancient:#12429986 AB:#12433463   33/50 peers      6 MiB chain  176 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:48:20 UTC Imported #13364194 0xf4b4…f97b (121 txs, 8.47 Mgas, 12685 ms, 55.36 KiB)
+2021-10-06 07:48:21 UTC  Ancient:#12430497 AB:#12433463   20/25 peers    0 bytes chain  654 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:48:53 UTC  Ancient:#12430499 AB:#12433614    7/25 peers    112 KiB chain  868 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:49:21 UTC Imported #13364198 0x5909…9b80 (391 txs, 23.87 Mgas, 4702 ms, 191.58 KiB)
+2021-10-06 07:49:26 UTC  Ancient:#12430731 AB:#12433877    4/25 peers      5 MiB chain  0 bytes queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:49:53 UTC  Ancient:#12431625 AB:#12434112    4/25 peers      4 MiB chain  0 bytes queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:50:25 UTC Syncing #13364199 0xfce8…1434     0.03 blk/s    4.4 tx/s    0.2 Mgas/s      0+    4 Qed Ancient:#12431627 LI:#13364204    7/25 peers      6 MiB chain  511 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:50:28 UTC Syncing #13364199 0xfce8…1434     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+    4 Qed Ancient:#12431627 LI:#13364204    8/25 peers      6 MiB chain  511 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:50:33 UTC Syncing #13364199 0xfce8…1434     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+    4 Qed Ancient:#12431627 LI:#13364204    8/25 peers      6 MiB chain  511 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:50:53 UTC Syncing #13364202 0x2995…d878     0.15 blk/s   21.2 tx/s    1.7 Mgas/s      0+    6 Qed Ancient:#12431630 LI:#13364209    8/25 peers      6 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:50:58 UTC Syncing #13364202 0x2995…d878     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+    6 Qed Ancient:#12431630 LI:#13364209   10/25 peers      6 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:51:03 UTC Syncing #13364202 0x2995…d878     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+    6 Qed Ancient:#12431630 LI:#13364209   11/25 peers      6 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:51:08 UTC Syncing #13364203 0xd3a8…62e5     0.20 blk/s   48.2 tx/s    3.1 Mgas/s      0+    5 Qed Ancient:#12431631 LI:#13364209   10/25 peers      6 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:51:13 UTC Syncing #13364204 0x7767…c2a6     0.20 blk/s   11.6 tx/s    0.6 Mgas/s      0+    4 Qed Ancient:#12431632 LI:#13364209    8/25 peers      6 MiB chain  532 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:51:18 UTC Syncing #13364204 0x7767…c2a6     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+    4 Qed Ancient:#12431632 LI:#13364209    6/25 peers      6 MiB chain  532 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:51:23 UTC Syncing #13364204 0x7767…c2a6     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+    4 Qed Ancient:#12431632 LI:#13364209    7/25 peers      6 MiB chain  532 KiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:51:41 UTC Syncing #13364205 0xfdb0…f783     0.05 blk/s   16.8 tx/s    1.4 Mgas/s      0+    7 Qed Ancient:#12431633 LI:#13364212    6/25 peers      6 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:51:43 UTC Syncing #13364206 0x84e5…f855     0.61 blk/s   13.5 tx/s    0.6 Mgas/s      0+    6 Qed Ancient:#12431634 LI:#13364212    5/25 peers      6 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:51:48 UTC Syncing #13364206 0x84e5…f855     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+    5 Qed Ancient:#12431635 LI:#13364212    6/25 peers      4 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:51:53 UTC Syncing #13364206 0x84e5…f855     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+    5 Qed Ancient:#12431635 LI:#13364212    6/25 peers      4 MiB chain    1 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-06 07:51:58 UTC Syncing #13364206 0x84e5…f855     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+    6 Qed Ancient:#12431635 LI:#13364213    7/25 peers      4 MiB chain    2 MiB queue  RPC:  0 conn,    0 req/s,    0 µs

@@ -1,0 +1,75 @@
+INFO [10-06|02:38:31.927] State heal in progress                   accounts=6426@365.02KiB slots=4790@356.77KiB codes=12401@105.31MiB nodes=293,869,132@86.12GiB pending=135,071
+INFO [10-06|02:38:43.193] State heal in progress                   accounts=6592@375.04KiB slots=4790@356.77KiB codes=12401@105.31MiB nodes=293,870,074@86.12GiB pending=135,745
+INFO [10-06|02:38:51.699] State heal in progress                   accounts=6644@378.19KiB slots=4790@356.77KiB codes=12401@105.31MiB nodes=293,870,650@86.12GiB pending=136,372
+INFO [10-06|02:39:00.810] State heal in progress                   accounts=6859@390.63KiB slots=4790@356.77KiB codes=12401@105.31MiB nodes=293,871,589@86.12GiB pending=136,840
+INFO [10-06|02:39:09.156] State heal in progress                   accounts=6959@396.13KiB slots=4790@356.77KiB codes=12401@105.31MiB nodes=293,872,173@86.12GiB pending=137,221
+INFO [10-06|02:39:17.740] Imported new block headers               count=1  elapsed=9.641ms   number=13,362,799 hash=b42848..c8efc2 age=1m5s
+INFO [10-06|02:39:20.821] State heal in progress                   accounts=7292@415.40KiB slots=4791@356.87KiB codes=12401@105.31MiB nodes=293,873,362@86.12GiB pending=137,643
+INFO [10-06|02:39:23.911] Imported new block headers               count=1  elapsed=6.513ms   number=13,362,800 hash=d75803..d7db4a age=1m6s
+INFO [10-06|02:39:24.124] Downloader queue stats                   receiptTasks=0 blockTasks=0  itemSize=232.21KiB throttle=1129
+INFO [10-06|02:39:31.008] State heal in progress                   accounts=7450@424.02KiB slots=4791@356.87KiB codes=12402@105.31MiB nodes=293,874,220@86.12GiB pending=138,125
+INFO [10-06|02:39:41.294] State heal in progress                   accounts=7823@443.91KiB slots=4794@357.09KiB codes=12402@105.31MiB nodes=293,875,390@86.12GiB pending=138,234
+INFO [10-06|02:39:42.180] Imported new block headers               count=1  elapsed=8.526ms   number=13,362,801 hash=e22581..2a2fc4 age=1m23s
+INFO [10-06|02:39:50.358] State heal in progress                   accounts=8047@456.22KiB slots=4796@357.26KiB codes=12402@105.31MiB nodes=293,876,250@86.12GiB pending=138,604
+INFO [10-06|02:39:59.388] State heal in progress                   accounts=8385@475.04KiB slots=4812@358.54KiB codes=12402@105.31MiB nodes=293,877,320@86.12GiB pending=139,147
+INFO [10-06|02:40:00.245] Imported new block headers               count=1  elapsed=6.280ms   number=13,362,802 hash=3f1652..7abc2c
+INFO [10-06|02:40:07.515] State heal in progress                   accounts=8579@485.99KiB slots=4814@358.70KiB codes=12402@105.31MiB nodes=293,878,027@86.12GiB pending=139,391
+INFO [10-06|02:40:12.293] Imported new block headers               count=1  elapsed=7.046ms   number=13,362,803 hash=abafab..6ca0df
+INFO [10-06|02:40:16.343] State heal in progress                   accounts=8886@502.19KiB slots=4821@359.26KiB codes=12402@105.31MiB nodes=293,879,007@86.12GiB pending=139,786
+INFO [10-06|02:40:21.040] Imported new block headers               count=2  elapsed=7.446ms   number=13,362,805 hash=889477..7cdfd1
+INFO [10-06|02:40:24.058] Imported new block headers               count=1  elapsed=6.636ms   number=13,362,806 hash=b274f6..31e65e
+INFO [10-06|02:40:25.160] Downloader queue stats                   receiptTasks=0 blockTasks=0  itemSize=306.57KiB throttle=856
+INFO [10-06|02:40:26.355] State heal in progress                   accounts=9163@518.01KiB slots=4833@360.23KiB codes=12402@105.31MiB nodes=293,879,985@86.12GiB pending=140,133
+INFO [10-06|02:40:27.300] Imported new block headers               count=1  elapsed=5.810ms   number=13,362,807 hash=3a83eb..95c073
+INFO [10-06|02:40:34.543] State heal in progress                   accounts=9346@528.19KiB slots=4841@360.88KiB codes=12402@105.31MiB nodes=293,880,718@86.12GiB pending=140,685
+INFO [10-06|02:40:42.370] Imported new block headers               count=1  elapsed=6.150ms   number=13,362,808 hash=742d06..4bbc83
+INFO [10-06|02:40:43.990] State heal in progress                   accounts=9634@544.90KiB slots=4880@363.89KiB codes=12402@105.31MiB nodes=293,881,656@86.12GiB pending=141,178
+INFO [10-06|02:40:52.406] State heal in progress                   accounts=9796@554.16KiB slots=4881@363.98KiB codes=12402@105.31MiB nodes=293,882,418@86.12GiB pending=141,724
+INFO [10-06|02:41:00.496] Imported new block headers               count=1  elapsed=10.393ms  number=13,362,809 hash=84688a..49e791
+INFO [10-06|02:41:00.869] State heal in progress                   accounts=9941@562.61KiB slots=4887@364.43KiB codes=12402@105.31MiB nodes=293,883,032@86.12GiB pending=142,101
+INFO [10-06|02:41:09.154] State heal in progress                   accounts=10195@577.17KiB slots=4907@366.05KiB codes=12402@105.31MiB nodes=293,883,821@86.12GiB pending=142,539
+INFO [10-06|02:41:15.767] Imported new block headers               count=2  elapsed=9.444ms   number=13,362,811 hash=c15ff5..b790cf
+INFO [10-06|02:41:18.493] State heal in progress                   accounts=10342@585.16KiB slots=4966@370.61KiB codes=12402@105.31MiB nodes=293,884,674@86.12GiB pending=143,272
+INFO [10-06|02:41:18.863] Imported new block headers               count=1  elapsed=5.812ms   number=13,362,812 hash=20af64..26c979
+WARN [10-06|02:41:22.539] Unexpected bytecode heal packet          peer=cfdf8de6 reqid=264,754,061,458,294,612
+INFO [10-06|02:41:24.929] Imported new block headers               count=2  elapsed=9.006ms   number=13,362,814 hash=fd72c1..b25848
+INFO [10-06|02:41:25.211] Downloader queue stats                   receiptTasks=0 blockTasks=0  itemSize=262.51KiB throttle=999
+INFO [10-06|02:41:28.878] State heal in progress                   accounts=10429@590.42KiB slots=5051@377.04KiB codes=12402@105.31MiB nodes=293,885,534@86.12GiB pending=144,283
+INFO [10-06|02:41:37.178] State heal in progress                   accounts=10473@592.87KiB slots=5073@378.76KiB codes=12402@105.31MiB nodes=293,886,081@86.12GiB pending=145,250
+INFO [10-06|02:41:47.721] State heal in progress                   accounts=10535@596.33KiB slots=5117@382.15KiB codes=12402@105.31MiB nodes=293,886,832@86.13GiB pending=146,193
+INFO [10-06|02:41:49.047] Imported new block headers               count=1  elapsed=8.220ms   number=13,362,815 hash=b22497..c047f2
+INFO [10-06|02:41:58.569] State heal in progress                   accounts=10668@603.78KiB slots=5175@386.51KiB codes=12402@105.31MiB nodes=293,887,686@86.13GiB pending=146,896
+WARN [10-06|02:41:58.570] Unexpected trienode heal packet          peer=326d3236 reqid=8,668,482,756,839,487,320
+INFO [10-06|02:42:08.707] State heal in progress                   accounts=10716@606.60KiB slots=5255@392.57KiB codes=12402@105.31MiB nodes=293,888,286@86.13GiB pending=147,309
+INFO [10-06|02:42:10.127] Imported new block headers               count=1  elapsed=8.207ms   number=13,362,816 hash=51c3bf..81c53a
+ERROR[10-06|02:42:15.820] Snapshot extension registration failed   peer=ab3f6bca err="peer connected on snap without compatible eth support"
+INFO [10-06|02:42:19.090] State heal in progress                   accounts=10736@607.65KiB slots=5332@398.42KiB codes=12403@105.32MiB nodes=293,888,880@86.13GiB pending=147,729
+WARN [10-06|02:42:19.091] Unexpected trienode heal packet          peer=1e1ea8b3 reqid=1,955,799,543,583,663,276
+INFO [10-06|02:42:28.429] State heal in progress                   accounts=10832@613.62KiB slots=5378@402.02KiB codes=12403@105.32MiB nodes=293,889,577@86.13GiB pending=148,584
+WARN [10-06|02:42:30.748] Checkpoint challenge timed out, dropping id=0956f0e01bd3a962 conn=dyndial addr=47.90.252.157:30303   type=erigon/v2021.08.5-al...
+INFO [10-06|02:42:37.384] State heal in progress                   accounts=10926@619.33KiB slots=5428@405.98KiB codes=12403@105.32MiB nodes=293,890,213@86.13GiB pending=149,624
+INFO [10-06|02:42:45.476] State heal in progress                   accounts=10974@622.33KiB slots=5517@412.77KiB codes=12403@105.32MiB nodes=293,890,856@86.13GiB pending=150,382
+INFO [10-06|02:42:52.357] Imported new block headers               count=1  elapsed=7.035ms   number=13,362,817 hash=f6ada9..613293 age=1m29s
+INFO [10-06|02:42:53.262] Downloader queue stats                   receiptTasks=0 blockTasks=0  itemSize=260.46KiB throttle=1007
+INFO [10-06|02:42:53.865] State heal in progress                   accounts=11026@625.36KiB slots=5639@422.24KiB codes=12403@105.32MiB nodes=293,891,554@86.13GiB pending=150,824
+INFO [10-06|02:43:02.854] State heal in progress                   accounts=11071@628.10KiB slots=5723@428.66KiB codes=12403@105.32MiB nodes=293,892,254@86.13GiB pending=151,573
+INFO [10-06|02:43:12.601] State heal in progress                   accounts=11142@632.52KiB slots=5793@434.14KiB codes=12403@105.32MiB nodes=293,892,968@86.13GiB pending=152,536
+INFO [10-06|02:43:16.484] Imported new block headers               count=1  elapsed=6.714ms   number=13,362,818 hash=2fae4b..5ddd20 age=1m36s
+INFO [10-06|02:43:20.775] State heal in progress                   accounts=11211@636.75KiB slots=5868@439.90KiB codes=12403@105.32MiB nodes=293,893,649@86.13GiB pending=153,174
+INFO [10-06|02:43:25.696] Imported new block headers               count=1  elapsed=5.681ms   number=13,362,819 hash=d4bd8d..1ee293 age=1m17s
+INFO [10-06|02:43:31.095] State heal in progress                   accounts=11236@638.20KiB slots=6039@452.74KiB codes=12403@105.32MiB nodes=293,894,478@86.13GiB pending=153,531
+INFO [10-06|02:43:31.725] Imported new block headers               count=1  elapsed=5.966ms   number=13,362,820 hash=2273fb..419fec
+INFO [10-06|02:43:34.813] Imported new block headers               count=1  elapsed=5.579ms   number=13,362,821 hash=c125be..1b5931
+INFO [10-06|02:43:37.879] Imported new block headers               count=1  elapsed=7.458ms   number=13,362,822 hash=f658e1..ad9b9c
+INFO [10-06|02:43:40.244] State heal in progress                   accounts=11253@639.11KiB slots=6167@462.27KiB codes=12403@105.32MiB nodes=293,895,110@86.13GiB pending=153,817
+ERROR[10-06|02:43:40.908] Snapshot extension registration failed   peer=06655455 err="peer connected on snap without compatible eth support"
+INFO [10-06|02:43:49.098] State heal in progress                   accounts=11294@641.33KiB slots=6292@471.64KiB codes=12403@105.32MiB nodes=293,895,833@86.13GiB pending=154,142
+INFO [10-06|02:43:57.819] State heal in progress                   accounts=11305@642.04KiB slots=6451@483.79KiB codes=12403@105.32MiB nodes=293,896,488@86.13GiB pending=154,345
+INFO [10-06|02:44:06.607] State heal in progress                   accounts=11329@643.31KiB slots=6604@495.23KiB codes=12403@105.32MiB nodes=293,897,164@86.13GiB pending=154,550
+INFO [10-06|02:44:08.000] Imported new block headers               count=1  elapsed=6.949ms   number=13,362,823 hash=a677e0..88fbe1
+INFO [10-06|02:44:08.325] Downloader queue stats                   receiptTasks=0 blockTasks=0  itemSize=286.59KiB throttle=915
+INFO [10-06|02:44:16.482] State heal in progress                   accounts=11363@645.50KiB slots=6759@507.01KiB codes=12403@105.32MiB nodes=293,897,990@86.13GiB pending=155,105
+INFO [10-06|02:44:17.061] Imported new block headers               count=1  elapsed=6.609ms   number=13,362,824 hash=0d2989..3eef7e
+INFO [10-06|02:44:25.908] State heal in progress                   accounts=11400@647.53KiB slots=6948@521.15KiB codes=12403@105.32MiB nodes=293,898,912@86.13GiB pending=155,659
+INFO [10-06|02:44:32.132] Imported new block headers               count=1  elapsed=7.274ms   number=13,362,825 hash=1d1c5b..235acf
+INFO [10-06|02:44:33.934] State heal in progress                   accounts=11421@648.70KiB slots=7198@539.80KiB codes=12403@105.32MiB nodes=293,899,732@86.13GiB pending=155,666
