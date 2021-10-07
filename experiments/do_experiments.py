@@ -3,7 +3,7 @@
 # Filename: do_experiments.py
 
 import os, sys, requests, datetime, time, json, re, subprocess, signal, random, numpy
-from scipy.stats import ks_2samp
+from scipy.stats import mannwhitneyu
 import argparse, configparser
 import logging
 
@@ -120,7 +120,7 @@ def query_metrics(metric_urls, last_n_seconds, ss_metrics):
         metric_name = metric["metric_name"]
         ss_metric_points = numpy.array(metric["data_points"]).astype(float)
         experiment_metric_points = numpy.array(results[metric_name]["values"]).astype(float)
-        t = ks_2samp(ss_metric_points[:,1], experiment_metric_points[:,1])
+        t = mannwhitneyu(ss_metric_points[:,1], experiment_metric_points[:,1])
         results["stat"][metric_name]["pvalue"] = t.pvalue
 
     return results
@@ -161,14 +161,14 @@ def do_experiment(experiment, injector_path, client_name, client_log, dump_logs_
     dump_logs_folder = "%s/%s%s-%.3f"%(dump_logs_path, experiment["syscall_name"], experiment["error_code"], experiment["failure_rate"])
 
     result = dict()
-    # step 1: 5 mins normal execution, tail the log
-    logging.info("5 min normal execution begins")
+    # step 1: 5 mins pre-check phase, tail the log
+    logging.info("5 min pre-check phase begins")
     normal_execution_log = tail_client_log(client_log, 60*5)
-    dump_logs(normal_execution_log, dump_logs_folder, "normal.log")
+    dump_logs(normal_execution_log, dump_logs_folder, "pre_check.log")
     normal_execution_metrics = query_metrics(metric_urls, 60*5, ss_metrics)
-    dump_metric(normal_execution_metrics, dump_logs_folder, "normal_execution_metrics.json")
+    dump_metric(normal_execution_metrics, dump_logs_folder, "pre_check_metrics.json")
     result["metrics"] = dict()
-    result["metrics"]["normal"] = normal_execution_metrics["stat"]
+    result["metrics"]["pre_check"] = normal_execution_metrics["stat"]
 
     # step 2: error injection experiment
     # start the injector
@@ -203,23 +203,16 @@ def do_experiment(experiment, injector_path, client_name, client_log, dump_logs_
         dump_metric(ce_execution_metrics, dump_logs_folder, "ce_execution_metrics.json")
         result["metrics"]["ce"] = ce_execution_metrics["stat"]
 
-    # step 3: 5 mins recovery phase + 2 * 5 mins post-recovery steady state analysis
+    # step 3: 5 mins recovery phase + 5 mins validation phase
     if not result["client_crashed"]:
         logging.info("5 mins recovery phase, we do nothing here.")
         time.sleep(60*5)
-        logging.info("1st 5 mins post-recovery steady state analysis")
-        recovery_phase_log = tail_client_log(client_log, 60*5)
-        dump_logs(recovery_phase_log, dump_logs_folder, "post_recovery_phase_1.log")
-        post_recovery_phase_metrics = query_metrics(metric_urls, 60*5, ss_metrics)
-        dump_metric(post_recovery_phase_metrics, dump_logs_folder, "post_recovery_phase_metrics_1.json")
-        result["metrics"]["post_recovery_1"] = post_recovery_phase_metrics["stat"]
-        time.sleep(3)
-        logging.info("2nd 5 mins post-recovery steady state analysis")
-        recovery_phase_log = tail_client_log(client_log, 60*5)
-        dump_logs(recovery_phase_log, dump_logs_folder, "post_recovery_phase_2.log")
-        post_recovery_phase_metrics = query_metrics(metric_urls, 60*5, ss_metrics)
-        dump_metric(post_recovery_phase_metrics, dump_logs_folder, "post_recovery_phase_metrics_2.json")
-        result["metrics"]["post_recovery_2"] = post_recovery_phase_metrics["stat"]
+        logging.info("5 mins validation phase")
+        validation_phase_log = tail_client_log(client_log, 60*5)
+        dump_logs(validation_phase_log, dump_logs_folder, "validation_phase.log")
+        validation_phase_metrics = query_metrics(metric_urls, 60*5, ss_metrics)
+        dump_metric(validation_phase_metrics, dump_logs_folder, "validation_phase_metrics.json")
+        result["metrics"]["validation"] = validation_phase_metrics["stat"]
 
     logging.info(result)
     experiment["result"] = result
@@ -266,8 +259,9 @@ def main(config):
                 break
             else:
                 restart_monitor(client_name, client_monitor)
-            # sleep for 10 mins to give the client time to warm up before a new experiment
-            time.sleep(60*10)
+            # sleep for 1 hour to give the client time to warm up before a new experiment
+            logging.info("1 hour warm up phase begins")
+            time.sleep(60*60)
 
     if (INJECTOR != None): os.killpg(os.getpgid(INJECTOR.pid), signal.SIGTERM)
 
