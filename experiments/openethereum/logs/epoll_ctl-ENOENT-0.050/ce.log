@@ -1,15 +1,16 @@
-2021-10-06 05:54:31 UTC Syncing #13363681 0x3802…f984     0.20 blk/s   37.2 tx/s    3.0 Mgas/s      0+   15 Qed Ancient:#12415236 LI:#13363696   10/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:54:35 UTC Syncing #13363681 0x3802…f984     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   16 Qed Ancient:#12415236 LI:#13363697   10/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:54:39 UTC Syncing #13363681 0x3802…f984     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   16 Qed Ancient:#12415236 LI:#13363697   10/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:54:44 UTC Syncing #13363681 0x3802…f984     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   16 Qed Ancient:#12415236 LI:#13363697   10/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:54:49 UTC Syncing #13363682 0x0f1f…d5b0     0.20 blk/s   64.2 tx/s    4.8 Mgas/s      0+   15 Qed Ancient:#12415238 LI:#13363697   10/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:00 UTC Syncing #13363684 0xcfd9…300a     0.20 blk/s   17.0 tx/s    1.3 Mgas/s      0+   14 Qed Ancient:#12415241 LI:#13363698   10/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:00 UTC Syncing #13363683 0x3ac3…c3c2     0.20 blk/s   22.2 tx/s    1.7 Mgas/s      0+   15 Qed Ancient:#12415240 LI:#13363698   10/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:06 UTC Syncing #13363685 0xf2e1…165d     0.20 blk/s   15.8 tx/s    1.7 Mgas/s      0+   13 Qed Ancient:#12415242 LI:#13363698   10/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:09 UTC Syncing #13363685 0xf2e1…165d     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   13 Qed Ancient:#12415242 LI:#13363698    7/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:17 UTC Syncing #13363686 0xafa8…7b53     0.20 blk/s   44.4 tx/s    2.6 Mgas/s      0+   13 Qed Ancient:#12415243 LI:#13363699    7/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:22 UTC Syncing #13363687 0x08ce…e3e3     0.20 blk/s   18.0 tx/s    1.3 Mgas/s      0+   12 Qed Ancient:#12415244 LI:#13363699    7/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:24 UTC Panic occured, see stderr for details
+2021-10-08 02:56:57 UTC Syncing #13375631 0xb3ac…c63d     0.10 blk/s    5.5 tx/s    0.4 Mgas/s      0+   34 Qed Ancient:#12957971 LI:#13375665   13/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:56:57 UTC Syncing #13375631 0xb3ac…c63d     0.20 blk/s   11.0 tx/s    0.8 Mgas/s      0+   34 Qed Ancient:#12957971 LI:#13375665   13/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:00 UTC Syncing #13375631 0xb3ac…c63d     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   35 Qed Ancient:#12957971 LI:#13375666   13/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:17 UTC Syncing #13375632 0x2a36…e423     0.10 blk/s   57.0 tx/s    3.0 Mgas/s      0+   34 Qed Ancient:#12957972 LI:#13375666   13/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:17 UTC Syncing #13375632 0x2a36…e423     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   34 Qed Ancient:#12957972 LI:#13375666   13/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:17 UTC Syncing #13375632 0x2a36…e423     0.20 blk/s  114.0 tx/s    6.0 Mgas/s      0+   34 Qed Ancient:#12957972 LI:#13375666   13/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:20 UTC Syncing #13375632 0x2a36…e423     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   35 Qed Ancient:#12957972 LI:#13375667    9/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:25 UTC Syncing #13375632 0x2a36…e423     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   35 Qed Ancient:#12957972 LI:#13375667    8/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:30 UTC Syncing #13375632 0x2a36…e423     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   35 Qed Ancient:#12957972 LI:#13375667   12/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:35 UTC Syncing #13375632 0x2a36…e423     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   35 Qed Ancient:#12957972 LI:#13375667   12/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:40 UTC Syncing #13375632 0x2a36…e423     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   36 Qed Ancient:#12957972 LI:#13375668   13/25 peers      4 MiB chain   11 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:46 UTC Syncing #13375632 0x2a36…e423     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   36 Qed Ancient:#12957972 LI:#13375668   15/25 peers      4 MiB chain   11 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:57:47 UTC Panic occured, see stderr for details
 
 
 ====================
@@ -48,12 +49,10 @@ This is a bug. Please report it at:
     https://github.com/openethereum/openethereum/issues/new
 
 
-2021-10-06 05:55:24 UTC Finishing work, please wait...
-2021-10-06 05:55:24 UTC Syncing #13363687 0x08ce…e3e3     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   13 Qed Ancient:#12415244 LI:#13363700    7/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:29 UTC Syncing #13363688 0x80b9…4f82     0.20 blk/s   29.6 tx/s    2.4 Mgas/s      0+   12 Qed Ancient:#12415245 LI:#13363700    7/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:34 UTC Syncing #13363688 0x80b9…4f82     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   12 Qed Ancient:#12415245 LI:#13363700    7/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:39 UTC Syncing #13363688 0x80b9…4f82     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   12 Qed Ancient:#12415245 LI:#13363700    7/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:44 UTC Syncing #13363688 0x80b9…4f82     0.00 blk/s    0.0 tx/s    0.0 Mgas/s      0+   12 Qed Ancient:#12415245 LI:#13363700    7/25 peers      5 MiB chain    5 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:55:49 UTC Syncing #13363690 0x6411…1b48     0.40 blk/s   68.4 tx/s    6.0 Mgas/s      0+   10 Qed Ancient:#12415247 LI:#13363700    7/25 peers      5 MiB chain    4 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
-2021-10-06 05:56:18 UTC Error on IO service shutdown: NotifyError::Closed(..)
+2021-10-08 02:57:47 UTC Finishing work, please wait...
+2021-10-08 02:58:13 UTC Syncing #13375633 0x6b52…6b05     0.20 blk/s   52.2 tx/s    6.0 Mgas/s      0+   35 Qed Ancient:#12957973 LI:#13375668   15/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:58:13 UTC Syncing #13375634 0x7664…b167     0.20 blk/s   55.8 tx/s    4.9 Mgas/s      0+   35 Qed Ancient:#12957976 LI:#13375668   15/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:58:13 UTC Syncing #13375634 0x7664…b167     0.07 blk/s   20.2 tx/s    1.8 Mgas/s      0+   35 Qed Ancient:#12957976 LI:#13375668   15/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:58:13 UTC Syncing #13375634 0x7664…b167     0.13 blk/s   37.2 tx/s    3.2 Mgas/s      0+   35 Qed Ancient:#12957976 LI:#13375668   15/25 peers      4 MiB chain   10 MiB queue  RPC:  0 conn,    0 req/s,    0 µs
+2021-10-08 02:58:19 UTC Error on IO service shutdown: NotifyError::Full(..)
 Error: 1

@@ -1,0 +1,14 @@
+WARN [10-07|16:09:09.034] Unexpected trienode heal packet          peer=9300ae06 reqid=8,911,169,779,865,025,509
+WARN [10-07|16:09:10.403] Unexpected trienode heal packet          peer=d676db51 reqid=1,353,635,068,538,875,474
+WARN [10-07|16:09:12.136] Unexpected trienode heal packet          peer=3879ae16 reqid=3,646,937,502,948,584,181
+WARN [10-07|16:09:12.157] Unexpected trienode heal packet          peer=3a1be69e reqid=7,128,799,341,136,091,568
+WARN [10-07|16:09:12.160] Unexpected trienode heal packet          peer=714e4dfb reqid=5,517,880,106,529,867,403
+WARN [10-07|16:09:14.208] Unexpected trienode heal packet          peer=55fd42f0 reqid=1,397,129,730,192,503,665
+WARN [10-07|16:09:14.212] Unexpected trienode heal packet          peer=ab5559cd reqid=4,064,650,332,220,325,652
+WARN [10-07|16:09:14.224] Unexpected trienode heal packet          peer=cdc87a95 reqid=1,829,003,216,118,712,193
+WARN [10-07|16:09:16.963] Unexpected trienode heal packet          peer=7cf1a589 reqid=8,237,703,421,408,835,208
+INFO [10-07|16:09:17.140] State heal in progress                   accounts=18320@1.01MiB    slots=73474@5.49MiB    codes=12727@108.11MiB nodes=303,402,962@89.34GiB pending=150,467
+INFO [10-07|16:09:21.701] Imported new block headers               count=1    elapsed=10.685ms  number=13,372,789 hash=9685bc..026ea8
+INFO [10-07|16:09:22.175] Downloader queue stats                   receiptTasks=0   blockTasks=0   itemSize=219.07KiB throttle=1197
+INFO [10-07|16:09:27.614] State heal in progress                   accounts=18320@1.01MiB    slots=73844@5.51MiB    codes=12727@108.11MiB nodes=303,404,035@89.34GiB pending=150,471
+CRIT [10-07|16:09:27.639] Failed to persist healing data           err="write /data/eth-data/geth/chaindata/1296063.log: resource temporarily unavailable"
