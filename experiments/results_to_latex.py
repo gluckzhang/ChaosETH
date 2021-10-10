@@ -2,26 +2,28 @@
 # -*- coding: utf-8 -*-
 # Filename: results_to_latex.py
 
-import os, sys, argparse, json, math, csv
+import os, sys, argparse, json, math, csv, re
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import ks_2samp
+import scipy
+from causalimpact import CausalImpact
 import logging
 
 TEMPLATE_CE_RESULTS = r"""\begin{table}[tb]
 \scriptsize
 \centering
 \caption{Chaos Engineering Experiment Results on %s}\label{tab:ce-experiment-results-%s}
-\begin{tabularx}{\columnwidth}{lrrrXX}
+\begin{tabularx}{\columnwidth}{lrrrXXX}
 \toprule
-\textbf{System Call}& \textbf{Error Code}& \textbf{E. R.}& \textbf{Inj.}& \textbf{H\textsubscript{C}}& \textbf{H\textsubscript{R}} \\
+\textbf{System Call}& \textbf{Error Code}& \textbf{E. R.}& \textbf{Inj.}& \textbf{PreC.}& \textbf{H\textsubscript{C}}& \textbf{H\textsubscript{R}} \\
 \midrule
 """ + "%s" + r"""
 \bottomrule
-\multicolumn{6}{p{8.5cm}}{
+\multicolumn{7}{p{8.5cm}}{
 H\textsubscript{C}: Marked if the injected errors crash the client.\newline
-H\textsubscript{R}: Marked if the client can recover to its steady state after the error injection stops.}
+H\textsubscript{R}: Marked if the client can recover to its steady state after the error injection stops.\newline
+The following metrics are selected: SELECTED_METRICS.}
 \end{tabularx}
 \end{table}
 """
@@ -31,28 +33,179 @@ def get_args():
         description = "Chaos engineering experiments .json to a table in latex")
     parser.add_argument("-f", "--file", required=True, help="the experiment result file (.json)")
     parser.add_argument("-s", "--steady-state", required=True, dest="steady_state", help="json file that describes the steady state")
-    parser.add_argument("-l", "--logs", required=True, help="path to the logs of experiment results folder")
+    parser.add_argument("-l", "--logs", help="path to the logs of experiment results folder")
     parser.add_argument("-p", "--p-value", type=float, required=True, dest="p_value", help="p-value threshold")
-    parser.add_argument("-t", "--template", default="ce", choices=['ce', 'benchmark'], help="the template to be used")
+    parser.add_argument("-t", "--template", default="ce", choices=['normal', 'ce', 'benchmark'], help="the template to be used")
     parser.add_argument("-c", "--client", required=True, choices=['geth', 'openethereum'], help="the client's name")
+    parser.add_argument("--metrics", nargs="+", help="metric names that are used for a ks comparison")
     parser.add_argument("--csv", action='store_true', help="generate a csv file of the results")
-    parser.add_argument("--plot", help="plot the samples CDFs", action='store_true')
+    parser.add_argument("--plot", help="plot the samples", action='store_true')
     args = parser.parse_args()
 
     return args
 
-def ks_compare_metrics(steady_state_metrics, experiment, logs_folder, p_value_threshold, plot):
-    post_recovery_metrics = read_post_recovery_metrics(logs_folder, experiment)
-    log_folder = os.path.join(logs_folder, "%s%s-%s"%(experiment["syscall_name"], experiment["error_code"], experiment["failure_rate"]))
-    normal_metrics = list()
+def causal_impact_analysis(sample1, sample2, data_point_interval, plot=False):
+    x = list()
+    y = list()
+    all_data_points = sample1 + sample2
+    for point in all_data_points:
+        x.append(point[0])
+        y.append(float(point[1]))
+    # standardize these timestamp points to have exactly the same interval
+    for i in range(1, len(x)):
+        x[i] = x[i-1] + data_point_interval
+
+    data_frame = pd.DataFrame({"timestamp": pd.to_datetime(x, unit="s"), "y": y})
+    data_frame = data_frame.set_index("timestamp")
+    data_frame = data_frame.asfreq(freq='%ds'%data_point_interval)
+    pre_period = [pd.to_datetime(x[0], unit="s"), pd.to_datetime(x[len(sample1)-1], unit="s")]
+    post_period = [pd.to_datetime(x[len(sample1)], unit="s"), pd.to_datetime(x[-1], unit="s")]
+
+    causal_impact = CausalImpact(data_frame, pre_period, post_period, prior_level_sd=0.1)
+    summary = causal_impact.summary()
+    report = causal_impact.summary(output='report')
+
+    relative_effect = -1 # Relative effect on average in the posterior area
+    pattern_re = re.compile(r'Relative effect \(s\.d\.\)\s+(-?\d+(\.\d+)?%)')
+    match = pattern_re.search(summary)
+    relative_effect = match.group(1)
+
+    p = -1 # Posterior tail-area probability
+    prob = -1 # Posterior prob. of a causal effect
+    pattern_p_value = re.compile(r'Posterior tail-area probability p: (0\.\d+|[1-9]\d*\.\d+)\sPosterior prob. of a causal effect: (0\.\d+|[1-9]\d*\.\d+)%')
+    match = pattern_p_value.search(summary)
+    p = float(match.group(1))
+    prob = float(match.group(2))
+
+    if plot: causal_impact.plot(panels=['original'], figsize=(12, 4))
+
+    return summary, report, p, prob, relative_effect
+
+def dtw_distance(s1, s2, w):
+    dtw = {}
+
+    w = max(w, abs(len(s1) - len(s2)))
+
+    for i in range(-1, len(s1)):
+        for j in range(-1, len(s2)):
+            dtw[(i, j)] = float('inf')
+    dtw[(-1, -1)] = 0
+
+    for i in range(len(s1)):
+        for j in range(max(0, i - w), min(len(s2), i + w)):
+            dist = (s1[i] - s2[j]) ** 2
+            dtw[(i, j)] = dist + min(dtw[(i - 1, j)], dtw[(i, j - 1)], dtw[(i - 1, j - 1)])
+
+    return np.sqrt(dtw[len(s1) - 1, len(s2) - 1])
+
+def jensen_shannon_distance(pd_1, pd_2):
+    """
+    method to compute the Jenson-Shannon Distance 
+    between two probability distributions
+    ref: https://medium.com/@sourcedexter/how-to-find-the-similarity-between-two-probability-distributions-using-python-a7546e90a08d
+    """
+
+    # convert the vectors into numpy arrays in case that they aren't
+    pd_1 = np.array(pd_1)
+    pd_2 = np.array(pd_2)
+
+    # if pd_1 and pd_2 have different shapes
+    if len(pd_1) < len(pd_2):
+        pd_2 = pd_2[:len(pd_1)]
+    elif len(pd_1) > len(pd_2):
+        pd_1 = pd_1[:len(pd_2)]
+
+    # calculate m
+    m = (pd_1 + pd_2) / 2
+
+    # compute Jensen Shannon Divergence
+    divergence = (scipy.stats.entropy(pd_1, m) + scipy.stats.entropy(pd_2, m)) / 2
+
+    # compute the Jensen Shannon Distance
+    distance = np.sqrt(divergence)
+
+    return distance
+
+def calculate_probability_distribution(sample):
+    data_df = pd.DataFrame(sample, columns=["metric"])
+    stats_df = data_df.groupby("metric")["metric"].agg("count").pipe(pd.DataFrame).rename(columns={"metric": "frequency"})
+    stats_df["pdf"] = stats_df["frequency"] / sum(stats_df["frequency"])
+    return stats_df["pdf"].tolist()
+
+def kullback_leibler_divergence(sample1, sample2):
+    return scipy.stats.entropy(sample1, qk=sample2)
+
+def ks_compare_steady_states(ss_metrics_1, ss_metrics_2, p_value_threshold, plot):
+    ss_metrics_1_dict = dict()
+    for metric in ss_metrics_1:
+        ss_metrics_1_dict[metric["metric_name"]] = metric["data_points"]
+
+    normal_metrics_ks = list()
+    for metric in ss_metrics_2:
+        metric_name = metric["metric_name"]
+        print(metric_name)
+        data_points_2 = np.array(metric["data_points"]).astype(float)
+        data_points_1 = np.array(ss_metrics_1_dict[metric_name]).astype(float)
+        t = scipy.stats.mannwhitneyu(data_points_1[:,1], data_points_2[:,1])
+        if t.pvalue > p_value_threshold: normal_metrics_ks.append(metric_name)
+        print("ks compare, p-value: %s"%t.pvalue)
+        if plot: plot_samples(data_points_1[:,1], data_points_2[:,1], metric_name)
+    print("stable metrics (ks): %s"%", ".join(normal_metrics_ks))
+
+def plot_samples(sample1, sample2, metric_name):
+    fig = plt.figure(figsize=(12, 1))
+    ax = fig.add_subplot()
+    ax.set_axis_off()
+    ax.margins(x=0)
+
+    x1 = list(range(0, len(sample1)))
+    x2 = list(range(len(sample1), len(sample1) + len(sample2)))
+    ax.plot(x1, sample1)
+    ax.plot(x2, sample2, color="red")
+
+    fig.savefig("%s.pdf"%metric_name, bbox_inches="tight", pad_inches=0)
+    plt.close(fig)
+
+def pre_check_steady_state(steady_state_metrics, metric_name_filter, experiment, logs_folder, p_value_threshold, plot):
+    pre_check_metrics = read_metrics_from_file(logs_folder, "pre_check_metrics.json", experiment)
+    abnormal_metrics = list()
     for metric in steady_state_metrics:
         metric_name = metric["metric_name"]
+        if metric_name_filter != None and metric_name not in metric_name_filter: continue
+
         ss_metric_points = np.array(metric["data_points"]).astype(float)
-        pr_metric_points = np.array(post_recovery_metrics[metric_name]["values"]).astype(float)
-        t = ks_2samp(ss_metric_points[:,1], pr_metric_points[:,1])
-        if t.pvalue > p_value_threshold: normal_metrics.append(metric_name)
-        if plot: plot_metric(log_folder, ss_metric_points[:,1], pr_metric_points[:,1], metric_name)
-    return ", ".join(normal_metrics)
+        pre_check_metric_points = np.array(pre_check_metrics[metric_name]["values"]).astype(float)
+        t = scipy.stats.mannwhitneyu(ss_metric_points[:,1], pre_check_metric_points[:,1])
+        if t.pvalue <= p_value_threshold: abnormal_metrics.append(metric_name)
+        if plot:
+            plot_samples(ss_metric_points[:,1], pre_check_metric_points[:,1], "%s (pre-check v.s. steady-state)\np-value: %s"%(metric_name, t.pvalue))
+    logging.info(abnormal_metrics)
+    return True if len(abnormal_metrics) == 0 else False
+
+def ks_compare_metrics(steady_state_metrics, metric_name_filter, experiment, logs_folder, p_value_threshold, plot):
+    pre_check_metrics = read_metrics_from_file(logs_folder, "pre_check_metrics.json", experiment)
+    ce_metrics = read_metrics_from_file(logs_folder, "ce_execution_metrics.json", experiment)
+    validation_phase_metrics = read_metrics_from_file(logs_folder, "validation_phase_metrics.json", experiment)
+    log_folder = os.path.join(logs_folder, "%s%s-%.3f"%(experiment["syscall_name"], experiment["error_code"], experiment["failure_rate"]))
+    abnormal_metrics_during_ce = list()
+    recovered_metrics = list()
+    for metric in steady_state_metrics:
+        metric_name = metric["metric_name"]
+        if metric_name_filter != None and metric_name not in metric_name_filter: continue
+
+        ss_metric_points = np.array(metric["data_points"]).astype(float)
+        pc_metric_points = np.array(pre_check_metrics[metric_name]["values"]).astype(float)
+        ce_metric_points = np.array(ce_metrics[metric_name]["values"]).astype(float)
+        vl_metric_points = np.array(validation_phase_metrics[metric_name]["values"]).astype(float)
+        t_vl = scipy.stats.mannwhitneyu(ss_metric_points[:,1], vl_metric_points[:,1])
+        if t_vl.pvalue > p_value_threshold:
+            recovered_metrics.append(metric_name)
+        t_ce = scipy.stats.mannwhitneyu(ss_metric_points[:,1], ce_metric_points[:,1])
+        if t_ce.pvalue <= p_value_threshold:
+            abnormal_metrics_during_ce.append(metric_name)
+        if plot:
+            plot_samples(ss_metric_points[:,1], vl_metric_points[:,1], "%s (steady_state v.s. validation)\np-value: %s"%(metric_name, t_vl.pvalue))
+    return r"\textcolor{red}{%d}, \textcolor{green}{%d}"%(len(abnormal_metrics_during_ce), len(recovered_metrics))
 
 def plot_metric(log_folder, data_s1, data_s2, metric):
     fig = plt.figure()
@@ -90,9 +243,8 @@ def plot_metric(log_folder, data_s1, data_s2, metric):
     fig.savefig(log_folder + "/" + metric + ".pdf")
     plt.close(fig)
 
-def read_post_recovery_metrics(logs_folder, experiment):
-    log_file_name = "post_recovery_phase_metrics.json"
-    log_file_path = os.path.join(logs_folder, "%s%s-%s"%(experiment["syscall_name"], experiment["error_code"], experiment["failure_rate"]), log_file_name)
+def read_metrics_from_file(logs_folder, log_file_name, experiment):
+    log_file_path = os.path.join(logs_folder, "%s%s-%.3f"%(experiment["syscall_name"], experiment["error_code"], experiment["failure_rate"]), log_file_name)
     with open(log_file_path, 'rt') as file:
         metrics = json.load(file)
         return metrics
@@ -129,24 +281,39 @@ def main(args):
         ss_data = json.load(steady_state_file)
         ss_metrics = ss_data["other_metrics"]
 
-        if args.csv: generate_csv(data["experiments"])
+        if args.template == "normal":
+            ss_metrics_2 = data["other_metrics"]
+            ks_compare_steady_states(ss_metrics, ss_metrics_2, args.p_value, args.plot)
+        elif args.template == "ce":
+            if args.csv: generate_csv(data["experiments"])
+            body = ""
+            for experiment in data["experiments"]:
+                if experiment["result"]["injection_count"] == 0: continue
 
-        body = ""
-        for experiment in data["experiments"]:
-            if experiment["result"]["injection_count"] == 0: continue
+                metrics_are_stable = pre_check_steady_state(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
 
-            body += "%s& %s& %s& %d& %s& %s\\\\\n"%(
-                experiment["syscall_name"],
-                experiment["error_code"][1:], # remove the "-" before the error code
-                round_number(experiment["failure_rate"]),
-                experiment["result"]["injection_count"],
-                "X" if experiment["result"]["client_crashed"] else "",
-                "" if experiment["result"]["client_crashed"] else ks_compare_metrics(ss_metrics, experiment, args.logs, args.p_value, args.plot)
-            )
-        body = body[:-1] # remove the very last line break
-        latex = TEMPLATE_CE_RESULTS%(args.client, args.client, body)
-        latex = latex.replace("_", "\\_")
-        print(latex)
+                body += "%s& %s& %s& %d& %s& %s& %s\\\\\n"%(
+                    experiment["syscall_name"],
+                    experiment["error_code"][1:], # remove the "-" before the error code
+                    round_number(experiment["failure_rate"]),
+                    experiment["result"]["injection_count"],
+                    "Passed" if metrics_are_stable else "Failed",
+                    "X" if experiment["result"]["client_crashed"] else "",
+                    "" if experiment["result"]["client_crashed"] else ks_compare_metrics(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
+                )
+            body = body[:-1] # remove the very last line break
+            latex = TEMPLATE_CE_RESULTS%(args.client, args.client, body)
+            if args.metrics:
+                latex = latex.replace("SELECTED_METRICS", ", ".join(args.metrics))
+            else:
+                metric_names = list()
+                for metric in ss_metrics:
+                    metric_names.append(metric["metric_name"])
+                latex = latex.replace("SELECTED_METRICS", ", ".join(metric_names))
+            latex = latex.replace("_", "\\_")
+            print(latex)
+        else:
+            pass
 
 if __name__ == "__main__":
     logger_format = '%(asctime)-15s %(levelname)-8s %(message)s'
