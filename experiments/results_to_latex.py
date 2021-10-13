@@ -13,14 +13,14 @@ import logging
 TEMPLATE_CE_RESULTS = r"""\begin{table}[tb]
 \scriptsize
 \centering
-\caption{Chaos Engineering Experiment Results on %s}\label{tab:ce-experiment-results-%s}
-\begin{tabularx}{\columnwidth}{lrrrXXX}
+\caption{Chaos Engineering Experiment Results}\label{tab:ce-experiment-results}
+\begin{tabularx}{\columnwidth}{lXrrrXXX}
 \toprule
-\textbf{System Call}& \textbf{Error Code}& \textbf{E. R.}& \textbf{Inj.}& \textbf{PreC.}& \textbf{H\textsubscript{C}}& \textbf{H\textsubscript{R}} \\
+\textbf{Client}& \textbf{Syscall}& \textbf{Error Code}& \textbf{E. R.}& \textbf{Inj.}& \textbf{PreC.}& \textbf{H\textsubscript{C}}& \textbf{H\textsubscript{R}} \\
 \midrule
 """ + "%s" + r"""
 \bottomrule
-\multicolumn{7}{p{8.5cm}}{
+\multicolumn{8}{p{8.5cm}}{
 H\textsubscript{C}: Marked if the injected errors crash the client.\newline
 H\textsubscript{R}: Marked if the client can recover to its steady state after the error injection stops.\newline
 The following metrics are selected: SELECTED_METRICS.}
@@ -179,7 +179,6 @@ def pre_check_steady_state(steady_state_metrics, metric_name_filter, experiment,
         if t.pvalue <= p_value_threshold: abnormal_metrics.append(metric_name)
         if plot:
             plot_samples(ss_metric_points[:,1], pre_check_metric_points[:,1], "%s (pre-check v.s. steady-state)\np-value: %s"%(metric_name, t.pvalue))
-    logging.info(abnormal_metrics)
     return True if len(abnormal_metrics) == 0 else False
 
 def ks_compare_metrics(steady_state_metrics, metric_name_filter, experiment, logs_folder, p_value_threshold, plot):
@@ -206,6 +205,7 @@ def ks_compare_metrics(steady_state_metrics, metric_name_filter, experiment, log
         if plot:
             plot_samples(ss_metric_points[:,1], vl_metric_points[:,1], "%s (steady_state v.s. validation)\np-value: %s"%(metric_name, t_vl.pvalue))
     return r"\textcolor{red}{%d}, \textcolor{green}{%d}"%(len(abnormal_metrics_during_ce), len(recovered_metrics))
+    # return r"\textcolor{red}{%s}, \textcolor{green}{%s}"%(", ".join(abnormal_metrics_during_ce), ", ".join(recovered_metrics))
 
 def plot_metric(log_folder, data_s1, data_s2, metric):
     fig = plt.figure()
@@ -287,12 +287,23 @@ def main(args):
         elif args.template == "ce":
             if args.csv: generate_csv(data["experiments"])
             body = ""
+            experiment_count = 0
+            row_count = 0
             for experiment in data["experiments"]:
                 if experiment["result"]["injection_count"] == 0: continue
 
-                metrics_are_stable = pre_check_steady_state(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
+                experiment_count = experiment_count + 1
 
-                body += "%s& %s& %s& %d& %s& %s& %s\\\\\n"%(
+                metrics_are_stable = pre_check_steady_state(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
+                if not metrics_are_stable: continue
+
+                row_count = row_count + 1
+                if row_count == 1:
+                    first_column = r"\multirow{ROW_COUNT}{*}{%s}"%args.client
+                else:
+                    first_column = ""
+                body += "%s& %s& %s& %s& %d& %s& %s& %s\\\\\n"%(
+                    first_column,
                     experiment["syscall_name"],
                     experiment["error_code"][1:], # remove the "-" before the error code
                     round_number(experiment["failure_rate"]),
@@ -301,8 +312,9 @@ def main(args):
                     "X" if experiment["result"]["client_crashed"] else "",
                     "" if experiment["result"]["client_crashed"] else ks_compare_metrics(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
                 )
+            body = body.replace("ROW_COUNT", str(row_count))
             body = body[:-1] # remove the very last line break
-            latex = TEMPLATE_CE_RESULTS%(args.client, args.client, body)
+            latex = TEMPLATE_CE_RESULTS%(body)
             if args.metrics:
                 latex = latex.replace("SELECTED_METRICS", ", ".join(args.metrics))
             else:
@@ -312,6 +324,8 @@ def main(args):
                 latex = latex.replace("SELECTED_METRICS", ", ".join(metric_names))
             latex = latex.replace("_", "\\_")
             print(latex)
+
+            logging.info("experiment count: %d"%experiment_count)
         else:
             pass
 
