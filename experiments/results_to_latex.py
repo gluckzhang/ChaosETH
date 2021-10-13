@@ -14,13 +14,13 @@ TEMPLATE_CE_RESULTS = r"""\begin{table}[tb]
 \scriptsize
 \centering
 \caption{Chaos Engineering Experiment Results}\label{tab:ce-experiment-results}
-\begin{tabularx}{\columnwidth}{lXrrrXXX}
+\begin{tabularx}{\columnwidth}{lXrrrXXXX}
 \toprule
-\textbf{Client}& \textbf{Syscall}& \textbf{Error Code}& \textbf{E. R.}& \textbf{Inj.}& \textbf{PreC.}& \textbf{H\textsubscript{C}}& \textbf{H\textsubscript{R}} \\
+\textbf{Client}& \textbf{Syscall}& \textbf{Error Code}& \textbf{E. R.}& \textbf{Inj.}& \textbf{Metric}& \textbf{H\textsubscript{C}}& \textbf{H\textsubscript{O}}& \textbf{H\textsubscript{R}}\\
 \midrule
 """ + "%s" + r"""
 \bottomrule
-\multicolumn{8}{p{8.5cm}}{
+\multicolumn{9}{p{8.5cm}}{
 H\textsubscript{C}: Marked if the injected errors crash the client.\newline
 H\textsubscript{R}: Marked if the client can recover to its steady state after the error injection stops.\newline
 The following metrics are selected: SELECTED_METRICS.}
@@ -168,7 +168,7 @@ def plot_samples(sample1, sample2, metric_name):
 
 def pre_check_steady_state(steady_state_metrics, metric_name_filter, experiment, logs_folder, p_value_threshold, plot):
     pre_check_metrics = read_metrics_from_file(logs_folder, "pre_check_metrics.json", experiment)
-    abnormal_metrics = list()
+    stable_metrics = list()
     for metric in steady_state_metrics:
         metric_name = metric["metric_name"]
         if metric_name_filter != None and metric_name not in metric_name_filter: continue
@@ -176,10 +176,10 @@ def pre_check_steady_state(steady_state_metrics, metric_name_filter, experiment,
         ss_metric_points = np.array(metric["data_points"]).astype(float)
         pre_check_metric_points = np.array(pre_check_metrics[metric_name]["values"]).astype(float)
         t = scipy.stats.mannwhitneyu(ss_metric_points[:,1], pre_check_metric_points[:,1])
-        if t.pvalue <= p_value_threshold: abnormal_metrics.append(metric_name)
+        if t.pvalue > p_value_threshold: stable_metrics.append(metric_name)
         if plot:
             plot_samples(ss_metric_points[:,1], pre_check_metric_points[:,1], "%s (pre-check v.s. steady-state)\np-value: %s"%(metric_name, t.pvalue))
-    return True if len(abnormal_metrics) == 0 else False
+    return stable_metrics
 
 def ks_compare_metrics(steady_state_metrics, metric_name_filter, experiment, logs_folder, p_value_threshold, plot):
     pre_check_metrics = read_metrics_from_file(logs_folder, "pre_check_metrics.json", experiment)
@@ -188,24 +188,29 @@ def ks_compare_metrics(steady_state_metrics, metric_name_filter, experiment, log
     log_folder = os.path.join(logs_folder, "%s%s-%.3f"%(experiment["syscall_name"], experiment["error_code"], experiment["failure_rate"]))
     abnormal_metrics_during_ce = list()
     recovered_metrics = list()
+    results = list()
     for metric in steady_state_metrics:
         metric_name = metric["metric_name"]
         if metric_name_filter != None and metric_name not in metric_name_filter: continue
 
+        metric_result = {"metric": metric_name, "h_o": "", "h_r": ""}
         ss_metric_points = np.array(metric["data_points"]).astype(float)
         pc_metric_points = np.array(pre_check_metrics[metric_name]["values"]).astype(float)
         ce_metric_points = np.array(ce_metrics[metric_name]["values"]).astype(float)
         vl_metric_points = np.array(validation_phase_metrics[metric_name]["values"]).astype(float)
         t_vl = scipy.stats.mannwhitneyu(ss_metric_points[:,1], vl_metric_points[:,1])
         if t_vl.pvalue > p_value_threshold:
-            recovered_metrics.append(metric_name)
+            # null-hypothesis cannot be rejected which means the two samples are similar
+            metric_result["h_r"] = "√"
         t_ce = scipy.stats.mannwhitneyu(ss_metric_points[:,1], ce_metric_points[:,1])
         if t_ce.pvalue <= p_value_threshold:
-            abnormal_metrics_during_ce.append(metric_name)
+            # null-hypothesis is rejected which means the two samples are statistically distinguishable
+            # the injected errors cause a side effect on this metric
+            metric_result["h_o"] = "√"
+        results.append(metric_result)
         if plot:
             plot_samples(ss_metric_points[:,1], vl_metric_points[:,1], "%s (steady_state v.s. validation)\np-value: %s"%(metric_name, t_vl.pvalue))
-    return r"\textcolor{red}{%d}, \textcolor{green}{%d}"%(len(abnormal_metrics_during_ce), len(recovered_metrics))
-    # return r"\textcolor{red}{%s}, \textcolor{green}{%s}"%(", ".join(abnormal_metrics_during_ce), ", ".join(recovered_metrics))
+    return sorted(results, key=lambda d: d["metric"])
 
 def plot_metric(log_folder, data_s1, data_s2, metric):
     fig = plt.figure()
@@ -289,31 +294,61 @@ def main(args):
             body = ""
             experiment_count = 0
             row_count = 0
-            for experiment in data["experiments"]:
+            for experiment in sorted(data["experiments"], key=lambda d: d["syscall_name"]):
                 if experiment["result"]["injection_count"] == 0: continue
 
                 experiment_count = experiment_count + 1
 
-                metrics_are_stable = pre_check_steady_state(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
-                if not metrics_are_stable: continue
-
-                row_count = row_count + 1
-                if row_count == 1:
-                    first_column = r"\multirow{ROW_COUNT}{*}{%s}"%args.client
+                first_column = r"\multirow{ROW_COUNT}{*}{%s}"%args.client
+                if experiment["result"]["client_crashed"]:
+                    row_count = row_count + 1
+                    if row_count > 1: first_column = ""
+                    body += r"%s& %s& %s& %s& %d& %s& %s& %s& %s\\"%(
+                        first_column,
+                        experiment["syscall_name"],
+                        experiment["error_code"][1:], # remove the "-" before the error code
+                        round_number(experiment["failure_rate"]),
+                        experiment["result"]["injection_count"],
+                        "-",
+                        "√",
+                        "-",
+                        "-"
+                    ) + "\n"
+                    # body += "\\midrule\n"
                 else:
-                    first_column = ""
-                body += "%s& %s& %s& %s& %d& %s& %s& %s\\\\\n"%(
-                    first_column,
-                    experiment["syscall_name"],
-                    experiment["error_code"][1:], # remove the "-" before the error code
-                    round_number(experiment["failure_rate"]),
-                    experiment["result"]["injection_count"],
-                    "Passed" if metrics_are_stable else "Failed",
-                    "X" if experiment["result"]["client_crashed"] else "",
-                    "" if experiment["result"]["client_crashed"] else ks_compare_metrics(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
-                )
+                    stable_metrics_during_pre_check = pre_check_steady_state(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
+                    metric_results = ks_compare_metrics(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
+                    metric_to_be_present = [m for m in metric_results if m["metric"] in stable_metrics_during_pre_check]
+                    for index, metric in enumerate(metric_to_be_present):
+                        row_count = row_count + 1
+                        if row_count > 1: first_column = ""
+                        if index == 0:
+                            if len(metric_to_be_present) > 1:
+                                row_template = r"%s& \multirow{METRIC_COUNT}{*}{%s}& \multirow{METRIC_COUNT}{*}{%s}& \multirow{METRIC_COUNT}{*}{%s}& \multirow{METRIC_COUNT}{*}{%d}& %s& %s& %s& %s\\" + "\n"
+                                row_template = row_template.replace("METRIC_COUNT", str(len(metric_to_be_present)))
+                            else:
+                                row_template = r"%s& %s& %s& %s& %d& %s& %s& %s& %s\\" + "\n"
+                            body += row_template%(
+                                first_column,
+                                experiment["syscall_name"],
+                                experiment["error_code"][1:], # remove the "-" before the error code
+                                round_number(experiment["failure_rate"]),
+                                experiment["result"]["injection_count"],
+                                metric["metric"],
+                                "",
+                                metric["h_o"],
+                                metric["h_r"]
+                            )
+                        else:
+                            row_template = r"& & & & & %s& & %s& %s\\" + "\n"
+                            body += row_template%(
+                                metric["metric"],
+                                metric["h_o"],
+                                metric["h_r"]
+                            )
+                    # if len(metric_to_be_present) > 0: body += "\\midrule\n"
             body = body.replace("ROW_COUNT", str(row_count))
-            body = body[:-1] # remove the very last line break
+            # body = body[:body.rfind("\n\\midrule")] # remove the last line which is a \midrule
             latex = TEMPLATE_CE_RESULTS%(body)
             if args.metrics:
                 latex = latex.replace("SELECTED_METRICS", ", ".join(args.metrics))
