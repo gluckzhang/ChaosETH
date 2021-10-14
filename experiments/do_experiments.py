@@ -260,8 +260,8 @@ def main(config):
             else:
                 restart_monitor(client_name, client_monitor)
             # sleep for 1 hour to give the client time to warm up before a new experiment
-            logging.info("1 hour warm up phase begins")
-            time.sleep(60*60)
+            logging.info("2 hours warm up phase begins")
+            time.sleep(60*60*2)
 
     if (INJECTOR != None): os.killpg(os.getpgid(INJECTOR.pid), signal.SIGTERM)
 
