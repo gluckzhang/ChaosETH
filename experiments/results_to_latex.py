@@ -14,15 +14,17 @@ TEMPLATE_CE_RESULTS = r"""\begin{table}[tb]
 \scriptsize
 \centering
 \caption{Chaos Engineering Experiment Results}\label{tab:ce-experiment-results}
-\begin{tabularx}{\columnwidth}{lXrrrXXXX}
+\begin{tabularx}{\columnwidth}{lllrrlXXX}
 \toprule
-\textbf{Client}& \textbf{Syscall}& \textbf{Error Code}& \textbf{E. R.}& \textbf{Inj.}& \textbf{Metric}& \textbf{H\textsubscript{C}}& \textbf{H\textsubscript{O}}& \textbf{H\textsubscript{R}}\\
+\textbf{C}& \textbf{Syscall}& \textbf{E. C.}& \textbf{E. R.}& \textbf{Inj.}& \textbf{Prechecked Metric}& \textbf{H\textsubscript{N}}& \textbf{H\textsubscript{O}}& \textbf{H\textsubscript{R}}\\
 \midrule
 """ + "%s" + r"""
 \bottomrule
 \multicolumn{9}{p{8.5cm}}{
-H\textsubscript{C}: Marked if the injected errors crash the client.\newline
-H\textsubscript{R}: Marked if the client can recover to its steady state after the error injection stops.\newline
+H\textsubscript{C}: `√' if the injected errors crash the client, otherwise `X'.\newline
+H\textsubscript{O}: `√' if the injected errors have visible effect on the metric, otherwise `X'.\newline
+H\textsubscript{R}: `√' if the metric matches its steady state during the validation phase, otherwise `X'.\newline
+If a hypothesis is left to be untested, it is marked as `-'.\newline
 The following metrics are selected: SELECTED_METRICS.}
 \end{tabularx}
 \end{table}
@@ -198,15 +200,22 @@ def ks_compare_metrics(steady_state_metrics, metric_name_filter, experiment, log
         pc_metric_points = np.array(pre_check_metrics[metric_name]["values"]).astype(float)
         ce_metric_points = np.array(ce_metrics[metric_name]["values"]).astype(float)
         vl_metric_points = np.array(validation_phase_metrics[metric_name]["values"]).astype(float)
-        t_vl = scipy.stats.mannwhitneyu(ss_metric_points[:,1], vl_metric_points[:,1])
-        if t_vl.pvalue > p_value_threshold:
-            # null-hypothesis cannot be rejected which means the two samples are similar
-            metric_result["h_r"] = "√"
         t_ce = scipy.stats.mannwhitneyu(ss_metric_points[:,1], ce_metric_points[:,1])
         if t_ce.pvalue <= p_value_threshold:
             # null-hypothesis is rejected which means the two samples are statistically distinguishable
-            # the injected errors cause a side effect on this metric
+            # the injected errors cause a visible effect on this metric
             metric_result["h_o"] = "√"
+
+            t_vl = scipy.stats.mannwhitneyu(ss_metric_points[:,1], vl_metric_points[:,1])
+            if t_vl.pvalue > p_value_threshold:
+                # null-hypothesis cannot be rejected which means the two samples are similar
+                metric_result["h_r"] = "√"
+            else:
+                metric_result["h_r"] = "X"
+        else:
+            # if the effect is invisible, h_r should not be tested
+            metric_result["h_o"] = "X"
+            metric_result["h_r"] = "-"
         results.append(metric_result)
         if plot:
             plot_samples(ss_metric_points[:,1], vl_metric_points[:,1], "%s (steady_state v.s. validation)\np-value: %s"%(metric_name, t_vl.pvalue))
@@ -310,11 +319,10 @@ def main(args):
                         round_number(experiment["failure_rate"]),
                         experiment["result"]["injection_count"],
                         "-",
-                        "√",
+                        "X",
                         "-",
                         "-"
                     ) + "\n"
-                    # body += "\\midrule\n"
                 else:
                     stable_metrics_during_pre_check = pre_check_steady_state(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
                     metric_results = ks_compare_metrics(ss_metrics, args.metrics, experiment, args.logs, args.p_value, args.plot)
@@ -323,11 +331,7 @@ def main(args):
                         row_count = row_count + 1
                         if row_count > 1: first_column = ""
                         if index == 0:
-                            if len(metric_to_be_present) > 1:
-                                row_template = r"%s& \multirow{METRIC_COUNT}{*}{%s}& \multirow{METRIC_COUNT}{*}{%s}& \multirow{METRIC_COUNT}{*}{%s}& \multirow{METRIC_COUNT}{*}{%d}& %s& %s& %s& %s\\" + "\n"
-                                row_template = row_template.replace("METRIC_COUNT", str(len(metric_to_be_present)))
-                            else:
-                                row_template = r"%s& %s& %s& %s& %d& %s& %s& %s& %s\\" + "\n"
+                            row_template = r"%s& %s& %s& %s& %d& %s& %s& %s& %s\\" + "\n"
                             body += row_template%(
                                 first_column,
                                 experiment["syscall_name"],
@@ -335,20 +339,19 @@ def main(args):
                                 round_number(experiment["failure_rate"]),
                                 experiment["result"]["injection_count"],
                                 metric["metric"],
-                                "",
+                                "√",
                                 metric["h_o"],
                                 metric["h_r"]
                             )
                         else:
-                            row_template = r"& & & & & %s& & %s& %s\\" + "\n"
+                            row_template = r"& & & & & %s& √& %s& %s\\" + "\n"
                             body += row_template%(
                                 metric["metric"],
                                 metric["h_o"],
                                 metric["h_r"]
                             )
-                    # if len(metric_to_be_present) > 0: body += "\\midrule\n"
             body = body.replace("ROW_COUNT", str(row_count))
-            # body = body[:body.rfind("\n\\midrule")] # remove the last line which is a \midrule
+            body = body[:-1] # remove the last line break
             latex = TEMPLATE_CE_RESULTS%(body)
             if args.metrics:
                 latex = latex.replace("SELECTED_METRICS", ", ".join(args.metrics))
