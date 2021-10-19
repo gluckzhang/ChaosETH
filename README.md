@@ -1,3 +1,5 @@
+*This project has been merged to the royal-chaos repository: https://github.com/KTH/royal-chaos/tree/master/chaoseth*
+
 # ChaosETH
 
 By design an Ethereum client should be fault-tolerant on turbulences in production. But developers need to verify the error-handling capabilities. It is interesting to explore how chaos engineering can be helpful to evaluate the resilience of an Ethereum client's implementation.
