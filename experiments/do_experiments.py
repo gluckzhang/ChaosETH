@@ -259,7 +259,7 @@ def main(config):
                 break
             else:
                 restart_monitor(client_name, client_monitor)
-            # sleep for 1 hour to give the client time to warm up before a new experiment
+            # sleep for 2 hours to give the client time to warm up before a new experiment
             logging.info("2 hours warm up phase begins")
             time.sleep(60*60*2)
 
